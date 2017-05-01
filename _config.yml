@@ -1,0 +1,27 @@
+# Site settings
+title: Shahbaz Ahmed
+header-img: img/home-bg.jpg
+email: shahbazahmed1269@gmail.com
+copyright_name: Shahbaz Ahmed
+description: "My personal blog"
+brand_name: "ahmeds.space"
+#baseurl: ""
+url: "http://ahmeds.space"
+twitter_username: shahbaz1269
+github_username:  shahbazahmed1269
+stackoverflow_username: 6937018/shahbaz-ahmed
+#facebook_username:  StartBootstrap
+#email_username:  shahbazahmed1269@gmail.com
+
+# Google Analytics
+# To enable google analytics, uncomment below line with a valid Google Tracking ID
+# google_tracking_id:
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+paginate: 5
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+
+gems: [jekyll-paginate, jekyll-feed, jemoji]
