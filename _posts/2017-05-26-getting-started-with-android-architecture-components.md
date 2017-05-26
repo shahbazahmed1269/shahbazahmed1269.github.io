@@ -4,14 +4,14 @@ title: Getting started with android architecture components
 header-img: "img/post-bg-06.jpg"
 ---
 
-There were lot of interesting stuff at this year's Google I/O 17. One such session was [Architecture Components - Introduction](https://events.google.com/io/schedule/?section=may-17&sid=77a07bfa-52e2-4488-8166-53f5c5a15ebc)
+There were some interesting stuff at this year's Google I/O 17. One such session was [Architecture Components - Introduction](https://events.google.com/io/schedule/?section=may-17&sid=77a07bfa-52e2-4488-8166-53f5c5a15ebc)
 by Yigit Boyar and Luke Bergstorm. The announcement included new [architecture components library](https://developer.android.com/topic/libraries/architecture/index.html).
 
 ### What's Android architecture components
 
-<div class="message">
-A new collection of libraries that help you design robust, testable, and maintainable apps. Start with classes for managing your UI component lifecycle and handling data persistence.
-</div>
+
+>A new collection of libraries that help you design robust, testable, and maintainable apps. Start with classes for managing your >UI component lifecycle and handling data persistence.
+
 
 The architecture components come with lot of new components such as  `LiveData, ViewModel, LifecycleObserver and LifecycleOwner` and `Room` Perisitence library. Together these components would help developers follow the right architecture pattern with proper seperation of responsibity for each layer (more on that later) and help survive configuration changes, avoid memory leaks and updating the UI in case of changes in our data.
 
@@ -21,7 +21,7 @@ The architecture components come with lot of new components such as  `LiveData, 
 
 3. **LiveData** - It is an observable data holder, it notifies the observers in case of data changes. It is also lifecycle aware component i.e. it is respects the lifecycle state of the `LifecycleOwner` (Activities or Fragments). This helps preventing memory leaks and other issues.
 
-4. **ViewModel**- Objects that provide data for the UI components. It does not have the references to the view and are unaffected by the lifecycle of LifecycleOwner.
+4. **ViewModel**- Objects that provide data for the UI components. They does not have the references to the view and are unaffected by the lifecycle of LifecycleOwner.
 
 5. **Room** - SQLite based object mapping library. Room abstracts the underlying layer of implementation details like creating and managing database and tables. Room uses annotations to generate code at compile time. Furthermore Room also supports LiveData and Rx Java 2 Flowables
 
@@ -73,6 +73,8 @@ Next we will create the entities.
 Enter the following URL in your browser [https://api.github.com/repos/square/retrofit/issues](https://api.github.com/repos/square/retrofit/issues) to get a list of JSON objects. Grab one one JSON object and head to the follwoing site: [jsonschema2pojo](http://www.jsonschema2pojo.org/) and paste the copies JSON object in the text area. Select source type as `JSON` and Annotation Style as `GSON` since we will be using GSON converter to convert JSON to entity.
 
 Now click preview and grab the generated code. Create 2 entities `Issue` and `User`.
+
+![jsonschema2pojo]({{ site.baseurl }}/img/jsonschema2pojo.png)
 
 Next, lets create another entity `ApiResponse`.
 
@@ -153,7 +155,7 @@ public class IssueRepositoryImpl implements IssueRepository {
 
 In the `getIssues()` method we create a `MutableLiveData` from the data obtained from retorfit. `MutableLiveData` is the subclass of LiveData that has `setValue(T)` method that can be used to modify the value it holds.
 
-Next let's create class named `ListIssuesViewModel` which extends `ViewModel` abstract class:
+Next let's create our ViewModel class named `ListIssuesViewModel` which extends `ViewModel` abstract class:
 
 {% highlight java %}
 public class ListIssuesViewModel extends ViewModel {
@@ -179,10 +181,10 @@ public class ListIssuesViewModel extends ViewModel {
 }
 {% endhighlight %}
 
-`ListIssuesViewModel` will fetch the data requested by the UI from the IssueRepository. It has `MediatorLiveData` `res` which is observed by the UI. `MediatorLiveData` is a subclass of `MutableLiveData` which allows us to observe one or more LiveData (`LiveData` from Repository in our case) and propagate the chnages to it own observers (Activity in our case).
+`ListIssuesViewModel` will fetch the data requested by the UI from the IssueRepository. It has `MediatorLiveData` `res` which is observed by the UI. `MediatorLiveData` is a subclass of `MutableLiveData` which allows us to observe one or more LiveData (`LiveData` from Repository in our case) and propagate the changes to it own observers (Activity in our case).
 
 Finally, create an activity which extends `LifecycleActivity` class and with EditText and Recycler View. 
-In `onCreate()` we will intialize te ViewModel, observe the `MediatorLiveData` property `res` and take appropriate action to display the view. 
+In `onCreate()` we will intialize the ViewModel, observe the `MediatorLiveData` property `res` and take appropriate action to display the view. 
 If user initiates a new search query, we will call `viewModel. loadIssues(@NonNull String user, String repo)` method.
 
 {% highlight java %}
@@ -208,7 +210,7 @@ Our app also persists our data across configuration changes such as screen rotat
 
 <img src="{{ site.baseurl }}/img/github-issues-shot-1.png" alt="github-issues-shot-1" style="width: 480px;"/>
 
-### What next
+### What's next
 
 Android developer's [Guide to app architecture](https://developer.android.com/topic/libraries/architecture/guide.html) suggests using Dagger 2 library for dependency injection and Room ORM for data persistance.
 
