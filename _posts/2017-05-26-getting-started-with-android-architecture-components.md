@@ -183,7 +183,7 @@ public class ListIssuesViewModel extends ViewModel {
 
 `ListIssuesViewModel` will fetch the data requested by the UI from the IssueRepository. It has `MediatorLiveData` `res` which is observed by the UI. `MediatorLiveData` is a subclass of `MutableLiveData` which allows us to observe one or more LiveData (`LiveData` from Repository's `getIssues()` method in our case) and propagate the changes to it own observers (Activity in our case).
 
-**Note:**: In case you want to have a ViewModel class with non-empty constructor, you have to create a Factory class which would create instance of you ViewModel and that Factory class has to implement `ViewModelProvider.Factory` interface.
+**Note**: In case you want to have a ViewModel class with non-empty constructor, you have to create a Factory class which would create instance of you ViewModel and that Factory class has to implement `ViewModelProvider.Factory` interface.
 
 Finally, create an activity which extends `LifecycleActivity` class and with EditText and Recycler View. 
 In `onCreate()` we will intialize the ViewModel, observe the `MediatorLiveData` property `res` and take appropriate action to display the view. 
