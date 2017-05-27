@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Getting started with android architecture components
+title: Getting started with android architecture components and MVVM
 header-img: "img/post-bg-06.jpg"
 ---
 
@@ -98,7 +98,7 @@ public class ApiResponse {
 {% endhighlight %}
 
 We will use `ApiResponse` to communicate data from Repository to ViewModel and ultimately to Activity.
-So if we get any error while fetching data from the remote api, we will set Error in the `ApiResponse` else we will set the list of `Issue` objects into it. 
+So if we get any error while fetching data from the remote api, we will set Error in the `ApiResponse`, else we will set the list of `Issue` objects into it. 
 
 Next let's create Retrofit Service interface:
 
@@ -117,8 +117,7 @@ public interface IssueRepository {
 }
 {% endhighlight %}
 
-Now we'll create `IssueRepositoryImpl` which implements `IssueRepository` interface. As discussed above Repositories are used to abstract the communication of rest of the code to the Data sources (such as Database or API calls). In our case `IssueRepositoryImpl` will use `GithubApiService` to fetch data from github API.
-
+Now we'll create `IssueRepositoryImpl` which implements `IssueRepository` interface. As discussed above Repositories are used to abstract the communication of rest of the code to the Data sources (such as Database or API calls). In our case `IssueRepositoryImpl` will use `GithubApiService` to fetch data from github API and return the value as a `LiveData`.
 {% highlight java %}
 public class IssueRepositoryImpl implements IssueRepository {
 
@@ -163,6 +162,7 @@ public class ListIssuesViewModel extends ViewModel {
     private MediatorLiveData<ApiResponse> res;
     private IssueRepository repository;
 
+    // No argument constructor
     public ListIssuesViewModel() {
         res = new MediatorLiveData<>();
         repository = new IssueRepositoryImpl();
@@ -181,11 +181,13 @@ public class ListIssuesViewModel extends ViewModel {
 }
 {% endhighlight %}
 
-`ListIssuesViewModel` will fetch the data requested by the UI from the IssueRepository. It has `MediatorLiveData` `res` which is observed by the UI. `MediatorLiveData` is a subclass of `MutableLiveData` which allows us to observe one or more LiveData (`LiveData` from Repository in our case) and propagate the changes to it own observers (Activity in our case).
+`ListIssuesViewModel` will fetch the data requested by the UI from the IssueRepository. It has `MediatorLiveData` `res` which is observed by the UI. `MediatorLiveData` is a subclass of `MutableLiveData` which allows us to observe one or more LiveData (`LiveData` from Repository's `getIssues()` method in our case) and propagate the changes to it own observers (Activity in our case).
+
+**Note:**: In case you want to have a ViewModel class with non-empty constructor, you have to create a Factory class which would create instance of you ViewModel and that Factory class has to implement `ViewModelProvider.Factory` interface.
 
 Finally, create an activity which extends `LifecycleActivity` class and with EditText and Recycler View. 
 In `onCreate()` we will intialize the ViewModel, observe the `MediatorLiveData` property `res` and take appropriate action to display the view. 
-If user initiates a new search query, we will call `viewModel. loadIssues(@NonNull String user, String repo)` method.
+If user initiates a new search query, we will call `viewModel. loadIssues(@NonNull String user, String repo)` method with appropriate parameters.
 
 {% highlight java %}
 @Override
@@ -206,7 +208,7 @@ If user initiates a new search query, we will call `viewModel. loadIssues(@NonNu
 {% endhighlight %}
 
 So we now have an app which uses android recommended architecture pattern by using MVVM, LiveData and Repository.
-Our app also persists our data across configuration changes such as screen rotations.
+Our app also persists data across configuration changes such as screen rotations.
 
 <img src="{{ site.baseurl }}/img/github-issues-shot-1.png" alt="github-issues-shot-1" style="width: 480px;"/>
 
@@ -214,4 +216,4 @@ Our app also persists our data across configuration changes such as screen rotat
 
 Android developer's [Guide to app architecture](https://developer.android.com/topic/libraries/architecture/guide.html) suggests using Dagger 2 library for dependency injection and Room ORM for data persistance.
 
-In the next article, we'll dive have a look at how to add dependency injection using Dagger 2.
+In the next article, we'll have a look at how to add dependency injection using Dagger 2.
