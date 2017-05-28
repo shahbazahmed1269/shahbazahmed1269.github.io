@@ -184,7 +184,7 @@ public class ListIssuesViewModel extends ViewModel {
 }
 {% endhighlight %}
 
-`ListIssuesViewModel` will fetch the data requested by the UI from the IssueRepository. It has `MediatorLiveData` `res` which is observed by the UI. `MediatorLiveData` is a subclass of `MutableLiveData` which allows us to observe one or more LiveData (`LiveData` from Repository's `getIssues()` method in our case) and propagate the changes to it own observers (Activity in our case).
+`ListIssuesViewModel` will fetch the data requested by the UI from the IssueRepository. It has `MediatorLiveData` `mApiResponse` which is observed by the UI. `MediatorLiveData` is a subclass of `MutableLiveData` which allows us to observe one or more LiveData (`LiveData` from Repository's `getIssues()` method in our case) and propagate the changes to it own observers (Activity in our case).
 
 **Note**: 
 1. In case you want to have a ViewModel class with non-empty constructor, you have to create a Factory class which would create instance of you ViewModel and that Factory class has to implement `ViewModelProvider.Factory` interface.
@@ -192,7 +192,7 @@ public class ListIssuesViewModel extends ViewModel {
 2. If you want reference to Application context in your View Model class, you can use [AndroidViewModel](https://developer.android.com/reference/android/arch/lifecycle/AndroidViewModel.html) class instead of `ViewModel` class.
 
 Finally, create an activity which extends `LifecycleActivity` class and with EditText and Recycler View. 
-In `onCreate()` we will intialize the ViewModel, observe the `MediatorLiveData` property `res` and take appropriate action to display the view. 
+In `onCreate()` we will intialize the ViewModel, observe the `MediatorLiveData` property `mApiResponse` and take appropriate action to display the view. 
 If user initiates a new search query, we will call `viewModel. loadIssues(@NonNull String user, String repo)` method with appropriate parameters.
 
 {% highlight java %}
@@ -222,4 +222,3 @@ Our app also persists data across configuration changes such as screen rotations
 
 Android developer's [Guide to app architecture](https://developer.android.com/topic/libraries/architecture/guide.html) suggests using Dagger 2 library for dependency injection and Room ORM for data persistance.
 
-In the next article, we'll have a look at how to add dependency injection using Dagger 2.
