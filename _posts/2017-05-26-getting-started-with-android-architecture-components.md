@@ -122,19 +122,19 @@ Now we'll create `IssueRepositoryImpl` which implements `IssueRepository` interf
 public class IssueRepositoryImpl implements IssueRepository {
 
     public static final String BASE_URL = "https://api.github.com/";
-    private GithubApiService githubApiService;
+    private GithubApiService mApiService;
 
     public IssueRepositoryImpl() {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(BASE_URL)
                 .build();
-        githubApiService = retrofit.create(GithubApiService.class);
+        mApiService = retrofit.create(GithubApiService.class);
     }
 
     public LiveData<ApiResponse> getIssues(String owner, String repo) {
         final MutableLiveData<ApiResponse> liveData = new MutableLiveData<>();
-        Call<List<Issue>> call = githubApiService.getIssues(owner, repo);
+        Call<List<Issue>> call = mApiService.getIssues(owner, repo);
         call.enqueue(new Callback<List<Issue>>() {
             @Override
             public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
@@ -159,23 +159,26 @@ Next let's create our ViewModel class named `ListIssuesViewModel` which extends 
 {% highlight java %}
 public class ListIssuesViewModel extends ViewModel {
 
-    private MediatorLiveData<ApiResponse> res;
-    private IssueRepository repository;
+    private MediatorLiveData<ApiResponse> mApiResponse;
+    private IssueRepository mIssueRepository;
 
     // No argument constructor
     public ListIssuesViewModel() {
-        res = new MediatorLiveData<>();
-        repository = new IssueRepositoryImpl();
+        mApiResponse = new MediatorLiveData<>();
+        mIssueRepository = new IssueRepositoryImpl();
     }
 
     @NonNull
-    public LiveData<ApiResponse> getRes() {
-        return res;
+    public LiveData<ApiResponse> getApiResponse() {
+        return mApiResponse;
     }
 
     public LiveData<ApiResponse> loadIssues(@NonNull String user, String repo) {
-        res.addSource(repository.getIssues(user, repo), apiResponse -> res.setValue(apiResponse));
-        return res;
+        mApiResponse.addSource(
+                mIssueRepository.getIssues(user, repo),
+                apiResponse -> mApiResponse.setValue(apiResponse)
+        );
+        return mApiResponse;
     }
 
 }
@@ -183,7 +186,10 @@ public class ListIssuesViewModel extends ViewModel {
 
 `ListIssuesViewModel` will fetch the data requested by the UI from the IssueRepository. It has `MediatorLiveData` `res` which is observed by the UI. `MediatorLiveData` is a subclass of `MutableLiveData` which allows us to observe one or more LiveData (`LiveData` from Repository's `getIssues()` method in our case) and propagate the changes to it own observers (Activity in our case).
 
-**Note**: In case you want to have a ViewModel class with non-empty constructor, you have to create a Factory class which would create instance of you ViewModel and that Factory class has to implement `ViewModelProvider.Factory` interface.
+**Note**: 
+1. In case you want to have a ViewModel class with non-empty constructor, you have to create a Factory class which would create instance of you ViewModel and that Factory class has to implement `ViewModelProvider.Factory` interface.
+
+2. If you want reference to Application context in your View Model class, you can use [AndroidViewModel](https://developer.android.com/reference/android/arch/lifecycle/AndroidViewModel.html) class instead of `ViewModel` class.
 
 Finally, create an activity which extends `LifecycleActivity` class and with EditText and Recycler View. 
 In `onCreate()` we will intialize the ViewModel, observe the `MediatorLiveData` property `res` and take appropriate action to display the view. 
@@ -194,10 +200,10 @@ If user initiates a new search query, we will call `viewModel. loadIssues(@NonNu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        viewModel = ViewModelProviders.of(this).get(ListIssuesViewModel.class);
+        mViewModel = ViewModelProviders.of(this).get(ListIssuesViewModel.class);
         setupView();
          // Handle changes emitted by LiveData
-        viewModel.getRes().observe(this, apiResponse -> {
+        mViewModel.getRes().observe(this, apiResponse -> {
             if (apiResponse.getError() != null) {
                 handleError(apiResponse.getError());
             } else {
