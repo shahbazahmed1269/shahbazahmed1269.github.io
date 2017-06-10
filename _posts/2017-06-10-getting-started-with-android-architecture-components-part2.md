@@ -4,7 +4,7 @@ title: Getting started with android architecture components and MVVM Part 2- Dep
 header-img: "img/post-bg-06.jpg"
 ---
 
-Alright lets do a quick recap. If you haven't already, I suggest you to read the [first part here]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}). In the [previous post]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}) we made an app which fetches and displays github issues using [android architecture components](https://developer.android.com/topic/libraries/architecture/index.html) library. Our app follows Google recommended architecture pattern as was described in the  Google I/O 17. We divided our app into the following layers for better code responsibility and seperation of concerns:
+Alright lets do a quick recap. If you haven't already, I suggest you to read the [first part here]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}). In the [previous post]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}) we made an app which fetches and displays github issues using [android architecture components](https://developer.android.com/topic/libraries/architecture/index.html) library. Our app follows Google recommended architecture pattern as was described in the  Google I/O 17. We divided our app into the following layers for better code responsibility and separation of concerns:
 1. View/UI layer
 2. ViewModel layer
 3. Repository layer
@@ -83,7 +83,7 @@ Image source : [Wikipedia](https://en.wikipedia.org/wiki/Dependency_inversion_pr
 
 Although it seems overkill in our simple app, DI becomes quite useful as the codebase becomes larger and eventually manually injecting dependencies become painful and error prone. However we will still go ahead and implement DI in our app for the sake of understanding.
 
-This leads us to another question: **Ok, how do we solve this problem?**
+This leads us to another question: **OK, how do we solve this problem?**
 Here comes [Dagger 2](https://google.github.io/dagger/) to the rescue. Dagger is the DI framework and library for java apps.
 
 Advantages of using Dagger includes but not limited to:
