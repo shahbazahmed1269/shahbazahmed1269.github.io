@@ -4,7 +4,7 @@ title: Getting started with android architecture components and MVVM Part 2- Dep
 header-img: "img/post-bg-06.jpg"
 ---
 
-Alright lets do a quick recap. If you haven't already, I suggest you to read the [first part here]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}). In the [previous post]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}) we made an app which fetches and displays github issues using [android architecture components](https://developer.android.com/topic/libraries/architecture/index.html) library. Our app follows Google recommended architecture pattern as was described in the  Google I/O 17. We divided our app into the following layers for better code responsibility and separation of concerns:
+Alright lets do a quick recap. If you haven't already, I suggest you to read the [first part here]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}). In the [previous post]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}) we made an app which fetches and displays GitHub issues using [android architecture components](https://developer.android.com/topic/libraries/architecture/index.html) library. Our app follows Google recommended architecture pattern as was described in the  Google I/O 17. We divided our app into the following layers for better code responsibility and separation of concerns:
 1. View/UI layer
 2. ViewModel layer
 3. Repository layer
@@ -101,7 +101,7 @@ Lets see how we can implement DI in our app using dagger 2. The main constructs 
 
 2. **`@Inject`**  - Annotating a field or constructor with `@Inject` annotation indicates that part of code is participating in dependency injection. Annotating a non private field with `@Inject` annotation indicates to dagger that dependency is being requested there. Annotating a constructor with `@Inject` tells dagger to use that constructor to instantiate the class. Dagger also supports field injection, but constructor and field injections are most widely used.
 
-2. **Components** -  Component interface is like an intermediate that connects the dependency providers (Modules) with the dependency requestors (`@Injected` properties). In component interface we mention which modules to fetch dependency from and specify which parts of the code would require DI using field or method injection. To create a component, we annotate the interface with `@Component` annotation. Dagger will generate an implementation of this interface at compile time and the generated class would create the dependency graph. The generated class name will be interface name  prefixed with `Dagger`.
+2. **Components** -  Component interface is like an intermediate that connects the dependency providers (Modules) with the dependency requestors (`@Inject` properties). In component interface we mention which modules to fetch dependency from and specify which parts of the code would require DI using field or method injection. To create a component, we annotate the interface with `@Component` annotation. Dagger will generate an implementation of this interface at compile time and the generated class would create the dependency graph. The generated class name will be interface name  prefixed with `Dagger`.
 
 
 Check the references below to learn more about Dependency Injection and Dagger.
@@ -276,16 +276,16 @@ In above code we first get the reference of our component `DaggerAppComponent` f
 
 So now we have Dependency Injection implemented in our app. I hope that I am able to get you started with the idea of DI and highlighted the reasons to use it. If you have any doubt or any suggestions for improvement or errors, feel free to reach me out.
 
-The full code for this tutorial can be found in [github repository](https://github.com/shahbazahmed1269/AndroidGithubIssues/tree/mvvm_part2_di) in branch named **"mvvm_part2_di"** . And don't forget to **star** the repo. 
+The full code for this tutorial can be found in [GitHub repository](https://github.com/shahbazahmed1269/AndroidGithubIssues/tree/mvvm_part2_di) in branch named **"mvvm_part2_di"** . And don't forget to **star** the repo. 
 
 
 ### References
 
-1. Youtube video by Gregory Kick: [<u>DAGGER 2 - A New Type of dependency injection</u>](https://youtu.be/oK_XtfXPkqw) 
-2. Youtube video on DI by Dan Lew:  [<u>Dependency Injection made simple</u>](https://youtu.be/B7rY_t3ghjI) 
+1. YouTube video by Gregory Kick: [<u>DAGGER 2 - A New Type of dependency injection</u>](https://youtu.be/oK_XtfXPkqw) 
+2. YouTube video on DI by Dan Lew:  [<u>Dependency Injection made simple</u>](https://youtu.be/B7rY_t3ghjI) 
 3. Dagger 2: [<u>official page</u>](https://google.github.io/dagger/)
 4. Codepath: [<u>tutorial on Dagger 2</u>](https://github.com/codepath/android_guides/wiki/Dependency-Injection-with-Dagger-2)
-5. And last but not the least, google's excellent: [<u>sample app for architecture components demo</u>](https://github.com/googlesamples/android-architecture-components/tree/master/GithubBrowserSample) on Github
+5. And last but not the least, Google's excellent: [<u>sample app for architecture components demo</u>](https://github.com/googlesamples/android-architecture-components/tree/master/GithubBrowserSample) on GitHub
 
 
 
