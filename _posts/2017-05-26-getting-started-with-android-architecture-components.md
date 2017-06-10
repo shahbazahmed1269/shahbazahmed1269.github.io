@@ -19,7 +19,7 @@ The architecture components come with lot of new components such as  `LiveData, 
 
 2. **LifecycleObserver** - LifecycleObserver subscribes to LifecycleOwner's lifecycle state changes and are self sufficient. It does not have to rely on Activity or fragment's `onStart()` or `onStop()` lifecycle callback to initialize and stop it.
 
-3. **LiveData** - It is an observable data holder, it notifies the observers in case of data changes. It is also lifecycle aware component i.e. it is respects the lifecycle state of the `LifecycleOwner` (Activities or Fragments). This helps preventing memory leaks and other issues.
+3. **LiveData** - It is an observable data holder, it notifies the observers in case of data changes. It is also lifecycle aware component i.e. it respects the lifecycle state of the `LifecycleOwner` (Activities or Fragments). This helps preventing memory leaks and other issues.
 
 4. **ViewModel**- Objects that provide data for the UI components. They does not have the references to the view and are unaffected by the lifecycle of LifecycleOwner.
 
@@ -34,7 +34,7 @@ Picture from: [Android developers site](https://developer.android.com/topic/libr
 
 We will be having the following components layers:
 
-1. **View** - This layercontains UI components and is responsible for view related code such as initializing child views, displaying progress bar, receiving input from user and handling animations, etc. Example: Activities and Fragments.
+1. **View** - This layer contains UI components and is responsible for view related code such as initializing child views, displaying progress bar, receiving input from user and handling animations, etc. Example: Activities and Fragments.
 
 2. **ViewModel** - ViewModels provide data to the UI components. In our case views will be using LiveData to observe the data changes in ViewModel.
 
@@ -152,7 +152,7 @@ public class IssueRepositoryImpl implements IssueRepository {
 }
 {% endhighlight %}
 
-In the `getIssues()` method we create a `MutableLiveData` from the data obtained from retorfit. `MutableLiveData` is the subclass of LiveData that has `setValue(T)` method that can be used to modify the value it holds.
+In the `getIssues()` method we create a `MutableLiveData` from the data obtained from retrofit. `MutableLiveData` is the subclass of LiveData that has `setValue(T)` method that can be used to modify the value it holds.
 
 Next let's create our ViewModel class named `ListIssuesViewModel` which extends `ViewModel` abstract class:
 
