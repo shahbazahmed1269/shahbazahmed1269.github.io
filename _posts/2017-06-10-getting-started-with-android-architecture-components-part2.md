@@ -13,7 +13,7 @@ Alright lets do a quick recap. If you haven't already, I suggest you to read the
 In this part we will use [Dagger 2](https://google.github.io/dagger/) to add Dependency Injection to our app. So let's get started.
 
 ### Let's Begin
-But hold on, you may ask **what is Dependency Injection** and why should we use it in our app? 
+But hold on, you may ask **what is Dependency Injection** and why should we use it in our app?
 Good question. First, lets define the word **"dependency"**.
 
 **Dependency**:
@@ -24,7 +24,7 @@ As an example if we look into our own app's classes `ListIssuesViewModel` and `I
 **Dependency Injection** or **DI**:
 
 >Dependency Injection is a technique to "inject" or supply the dependencies of an object from outside.
->This means an object creating its dependendencies via `new` operator is strictly prohibited.
+>This means an object creating its dependencies via `new` operator is strictly prohibited.
 
 Dependency Injection initially appears to be more complicated than it actually is. The first time read about it, I almost didn't get it. But with a simple example I got the idea behind it. Let's take an example from our issues app.
 
@@ -37,12 +37,12 @@ Here is the simplified version of sample code that we wrote in the [first part](
 public class ListIssuesViewModel extends ViewModel {
   private IssueRepository mIssueRepository;
   // Other member declarations
-  
+
   public ListIssuesViewModel() {
         mIssueRepository = new IssueRepositoryImpl();
     	// Other code
     }
-  
+
   // Other code
 }
 {% endhighlight %}
@@ -56,17 +56,17 @@ The above class when refactored to follow DI would look like this:
 public class ListIssuesViewModel extends ViewModel {
   private IssueRepository mIssueRepository;
   // Other member declarations
-  
+
   public ListIssuesViewModel(IssueRepository repository) {
         mIssueRepository = repository;
     	// Other code
     }
-  
+
   // Other code
 }
 {% endhighlight %}
 
-Important thing to observe is how object of type `IssueRepository` is supplied to class `ListIssuesViewModel` via the constructor. This technique is known as constructor injection. 
+Important thing to observe is how object of type `IssueRepository` is supplied to class `ListIssuesViewModel` via the constructor. This technique is known as constructor injection.
 
 **Note**: `IssueRepository` is an interface. It acts like a contract between `ListIssuesViewModel` and `IssueRepositoryImpl`. More on this later.
 
@@ -182,7 +182,7 @@ public class IssueRepositoryImpl implements IssueRepository {
     public IssueRepositoryImpl() {
     }
 
-    // Other code remains unchanged ... 
+    // Other code remains unchanged ...
 }
 {% endhighlight %}
 
@@ -252,7 +252,7 @@ Don't forget to add property `android:name=".IssuesApplication"` to the `<applic
 Finally we make changes to our MainActivity.java file:
 
 {% highlight java %}
-public class MainActivity extends LifecycleActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Inject
     ViewModelProvider.Factory mViewModelFactory;
@@ -265,7 +265,7 @@ public class MainActivity extends LifecycleActivity {
         // Required by Dagger2 for field injection
         ((IssuesApplication) getApplication()).getAppComponent().inject(this);
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ListIssuesViewModel.class);
-        
+
         // other code remains unchanged ...
     }
 }
@@ -276,21 +276,13 @@ In above code we first get the reference of our component `DaggerAppComponent` f
 
 So now we have Dependency Injection implemented in our app. I hope that I am able to get you started with the idea of DI and highlighted the reasons to use it. If you have any doubt or any suggestions for improvement or errors, feel free to reach me out.
 
-The full code for this tutorial can be found in [GitHub repository](https://github.com/shahbazahmed1269/AndroidGithubIssues/tree/mvvm_part2_di) in branch named **"mvvm_part2_di"** . And don't forget to **star** the repo. 
+The full code for this tutorial can be found in [GitHub repository](https://github.com/shahbazahmed1269/AndroidGithubIssues/tree/mvvm_part2_di) in branch named **"mvvm_part2_di"** . And don't forget to **star** the repo.
 
 
 ### References
 
-1. YouTube video by Gregory Kick: [<u>DAGGER 2 - A New Type of dependency injection</u>](https://youtu.be/oK_XtfXPkqw) 
-2. YouTube video on DI by Dan Lew:  [<u>Dependency Injection made simple</u>](https://youtu.be/B7rY_t3ghjI) 
+1. YouTube video by Gregory Kick: [<u>DAGGER 2 - A New Type of dependency injection</u>](https://youtu.be/oK_XtfXPkqw)
+2. YouTube video on DI by Dan Lew:  [<u>Dependency Injection made simple</u>](https://youtu.be/B7rY_t3ghjI)
 3. Dagger 2: [<u>official page</u>](https://google.github.io/dagger/)
 4. Codepath: [<u>tutorial on Dagger 2</u>](https://github.com/codepath/android_guides/wiki/Dependency-Injection-with-Dagger-2)
 5. And last but not the least, Google's excellent: [<u>sample app for architecture components demo</u>](https://github.com/googlesamples/android-architecture-components/tree/master/GithubBrowserSample) on GitHub
-
-
-
-
-
-
-
-

@@ -13,11 +13,11 @@ by Yigit Boyar and Luke Bergstorm. The announcement included new [architecture c
 >A new collection of libraries that help you design robust, testable, and maintainable apps. Start with classes for managing your >UI component lifecycle and handling data persistence.
 
 
-The architecture components come with lot of new components such as  `LiveData, ViewModel, LifecycleObserver and LifecycleOwner` and `Room` Perisitence library. Together these components would help developers follow the right architecture pattern with proper seperation of responsibity for each layer (more on that later) and help survive configuration changes, avoid memory leaks and updating the UI in case of changes in our data.
+The architecture components come with lot of new components such as  `LiveData, ViewModel, LifecycleObserver and LifecycleOwner` and `Room` Persistence library. Together these components would help developers follow the right architecture pattern with proper separation of responsibility for each layer (more on that later) and help survive configuration changes, avoid memory leaks and updating the UI in case of changes in our data.
 
 1. **LifecycleOwner** - Interface for components having Lifecycle (such as Activities and Fragments).
 
-2. **LifecycleObserver** - LifecycleObserver subscribes to LifecycleOwner's lifecycle state changes and are self sufficient. It does not have to rely on Activity or fragment's `onStart()` or `onStop()` lifecycle callback to initialize and stop it.
+2. **LifecycleObserver** - LifecycleObserver subscribes to LifecycleOwner's lifecycle state changes and are self sufficient. It does not have to rely on Activity or fragment's `onStart()` or `onStop()` lifecycle callback to initialise and stop it.
 
 3. **LiveData** - It is an observable data holder, it notifies the observers in case of data changes. It is also lifecycle aware component i.e. it respects the lifecycle state of the `LifecycleOwner` (Activities or Fragments). This helps preventing memory leaks and other issues.
 
@@ -27,14 +27,14 @@ The architecture components come with lot of new components such as  `LiveData, 
 
 ### MVVM Pattern using Architecture components
 
-To demonstrate the MVVM architecture pattern, let's create a simple android app to fetch the issues of any github repository. In this post We will be mostly be covering ViewModel and LiveData components.
+To demonstrate the MVVM architecture pattern, let's create a simple android app to fetch the issues of any Github repository. In this post We will be mostly be covering ViewModel and LiveData components.
 
 ![MVVM Architecture]({{ site.baseurl }}/img/mvvm-architecture.png)
 Picture from: [Android developers site](https://developer.android.com/topic/libraries/architecture/guide.html)
 
 We will be having the following components layers:
 
-1. **View** - This layer contains UI components and is responsible for view related code such as initializing child views, displaying progress bar, receiving input from user and handling animations, etc. Example: Activities and Fragments.
+1. **View** - This layer contains UI components and is responsible for view related code such as initialising child views, displaying progress bar, receiving input from user and handling animations, etc. Example: Activities and Fragments.
 
 2. **ViewModel** - ViewModels provide data to the UI components. In our case views will be using LiveData to observe the data changes in ViewModel.
 
@@ -46,7 +46,7 @@ We will be having the following components layers:
 ### Enough of talk. Let's Code
 
 It is assumed that you have some understanding of [retrofit](https://github.com/square/retrofit).
-The code described below can be found in the github [here](https://github.com/shahbazahmed1269/androidgithubissues).
+The code described below can be found in the Github [here](https://github.com/shahbazahmed1269/androidgithubissues).
 
 Open project level `build.gradle` file and add the following:
 {% highlight groovy %}
@@ -63,14 +63,14 @@ Add the retrofit 2 and architecture components dependencies to app level `build.
 compile 'com.squareup.retrofit2:retrofit:2.1.0'
 compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
-compile 'android.arch.lifecycle:runtime:1.0.0-alpha1'
-compile 'android.arch.lifecycle:extensions:1.0.0-alpha1'
-annotationProcessor 'android.arch.lifecycle:compiler:1.0.0-alpha1'
+compile 'android.arch.lifecycle:runtime:1.0.0'
+compile 'android.arch.lifecycle:extensions:1.0.0-alpha9-1'
+annotationProcessor 'android.arch.lifecycle:compiler:1.0.0-alpha9-1'
 {% endhighlight %}
 
 Next we will create the entities.
 
-Enter the following URL in your browser [https://api.github.com/repos/square/retrofit/issues](https://api.github.com/repos/square/retrofit/issues) to get a list of JSON objects. Grab one one JSON object and head to the follwoing site: [jsonschema2pojo](http://www.jsonschema2pojo.org/) and paste the copies JSON object in the text area. Select source type as `JSON` and Annotation Style as `GSON` since we will be using GSON converter to convert JSON to entity.
+Enter the following URL in your browser [https://api.github.com/repos/square/retrofit/issues](https://api.github.com/repos/square/retrofit/issues) to get a list of JSON objects. Grab one one JSON object and head to the following site: [jsonschema2pojo](http://www.jsonschema2pojo.org/) and paste the copies JSON object in the text area. Select source type as `JSON` and Annotation Style as `GSON` since we will be using GSON converter to convert JSON to entity.
 
 Now click preview and grab the generated code. Create 2 entities `Issue` and `User`.
 
@@ -82,7 +82,7 @@ Next, lets create another entity `ApiResponse`.
 public class ApiResponse {
     private List<Issue> issues;
     private Throwable error;
-    
+
     public ApiResponse(List<Issue> issues) {
         this.issues = issues;
         this.error = null;
@@ -98,7 +98,7 @@ public class ApiResponse {
 {% endhighlight %}
 
 We will use `ApiResponse` to communicate data from Repository to ViewModel and ultimately to Activity.
-So if we get any error while fetching data from the remote api, we will set Error in the `ApiResponse`, else we will set the list of `Issue` objects into it. 
+So if we get any error while fetching data from the remote api, we will set Error in the `ApiResponse`, else we will set the list of `Issue` objects into it.
 
 Next let's create Retrofit Service interface:
 
@@ -109,7 +109,7 @@ public interface GithubApiService {
 }
 {% endhighlight %}
 
-Next, we'll create Repository. First lets create `IssueRepository` interface 
+Next, we'll create Repository. First lets create `IssueRepository` interface
 
 {% highlight java %}
 public interface IssueRepository {
@@ -117,7 +117,7 @@ public interface IssueRepository {
 }
 {% endhighlight %}
 
-Now we'll create `IssueRepositoryImpl` which implements `IssueRepository` interface. As discussed above Repositories are used to abstract the communication of rest of the code to the Data sources (such as Database or API calls). In our case `IssueRepositoryImpl` will use `GithubApiService` to fetch data from github API and return the value as a `LiveData`.
+Now we'll create `IssueRepositoryImpl` which implements `IssueRepository` interface. As discussed above Repositories are used to abstract the communication of rest of the code to the Data sources (such as Database or API calls). In our case `IssueRepositoryImpl` will use `GithubApiService` to fetch data from Github API and return the value as a `LiveData`.
 {% highlight java %}
 public class IssueRepositoryImpl implements IssueRepository {
 
@@ -186,23 +186,25 @@ public class ListIssuesViewModel extends ViewModel {
 
 `ListIssuesViewModel` will fetch the data requested by the UI from the IssueRepository. It has `MediatorLiveData` `mApiResponse` which is observed by the UI. `MediatorLiveData` is a subclass of `MutableLiveData` which allows us to observe one or more LiveData (`LiveData` from Repository's `getIssues()` method in our case) and propagate the changes to it own observers (Activity in our case).
 
-**Note**: 
+**Note**:
 1. In case you want to have a ViewModel class with non-empty constructor, you have to create a Factory class which would create instance of you ViewModel and that Factory class has to implement `ViewModelProvider.Factory` interface.
 
 2. If you want reference to Application context in your View Model class, you can use [AndroidViewModel](https://developer.android.com/reference/android/arch/lifecycle/AndroidViewModel.html) class instead of `ViewModel` class.
 
-Finally, create an activity which extends `LifecycleActivity` class and with EditText and Recycler View. 
-In `onCreate()` we will intialize the ViewModel, observe the `MediatorLiveData` property `mApiResponse` and take appropriate action to display the view. 
+Finally, create an activity which extends `AppCompatActivity` class (Since `LifecycleActivity` has been deprecated as of version architecture components `1.0.0-alpha9–1` and both `AppCompatActivity` and Support Fragment now implement the `LifecycleOwner` interface) with EditText and Recycler View.
+In `onCreate()` we will initialise the ViewModel, observe the `MediatorLiveData` property `mApiResponse` and take appropriate action to display the view.
 If user initiates a new search query, we will call `viewModel. loadIssues(@NonNull String user, String repo)` method with appropriate parameters.
 
 {% highlight java %}
-@Override
+public class MainActivity extends AppCompatActivity {
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mViewModel = ViewModelProviders.of(this).get(ListIssuesViewModel.class);
         setupView();
-         // Handle changes emitted by LiveData
+        // Handle changes emitted by LiveData
         mViewModel.getRes().observe(this, apiResponse -> {
             if (apiResponse.getError() != null) {
                 handleError(apiResponse.getError());
@@ -211,6 +213,10 @@ If user initiates a new search query, we will call `viewModel. loadIssues(@NonNu
             }
         });
     }
+
+  // Rest of the code
+
+}
 {% endhighlight %}
 
 So we now have an app which uses android recommended architecture pattern by using MVVM, LiveData and Repository.
@@ -220,5 +226,4 @@ Our app also persists data across configuration changes such as screen rotations
 
 ### What's next
 
-Android developer's [Guide to app architecture](https://developer.android.com/topic/libraries/architecture/guide.html) suggests using Dagger 2 library for dependency injection and Room ORM for data persistance.
-
+Android developer's [Guide to app architecture](https://developer.android.com/topic/libraries/architecture/guide.html) suggests using Dagger 2 library for dependency injection and Room ORM for data persistence.
