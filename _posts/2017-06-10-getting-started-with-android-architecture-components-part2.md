@@ -2,6 +2,7 @@
 layout: post
 title: Getting started with android architecture components and MVVM Part 2- Dependency Injection
 header-img: "img/post-bg-06.jpg"
+comments: true
 ---
 
 Alright lets do a quick recap. If you haven't already, I suggest you to read the [first part here]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}). In the [previous post]({{ site.baseurl }}{% link _posts/2017-05-26-getting-started-with-android-architecture-components.md %}) we made an app which fetches and displays GitHub issues using [android architecture components](https://developer.android.com/topic/libraries/architecture/index.html) library. Our app follows Google recommended architecture pattern as was described in the  Google I/O 17. We divided our app into the following layers for better code responsibility and separation of concerns:

@@ -2,6 +2,7 @@
 layout: post
 title: Getting started with android architecture components and MVVM
 header-img: "img/post-bg-06.jpg"
+comments: true
 ---
 
 There were some interesting stuff at this year's Google I/O 17. One such session was [Architecture Components - Introduction](https://events.google.com/io/schedule/?section=may-17&sid=77a07bfa-52e2-4488-8166-53f5c5a15ebc)

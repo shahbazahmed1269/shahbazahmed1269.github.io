@@ -11,6 +11,9 @@ url: "http://ahmedshahbaz.me"
 twitter_username: shahbaz1269
 github_username:  shahbazahmed1269
 stackoverflow_username: 6937018/shahbaz-ahmed
+disqus:
+  shortname: shahbazahmed
+share: true
 #email_username:  shahbazahmed1269@gmail.com
 
 # Google Analytics
