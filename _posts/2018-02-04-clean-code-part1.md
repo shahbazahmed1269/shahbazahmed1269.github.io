@@ -10,7 +10,7 @@ Its been around 2 years since I started programming professionally. During this 
 
 After reading a couple of chapters, I thought it would be helpful to maintain concise notes highlighting the important points I get while reading this book. So my motivation behind this post is to share my learnings about writing cleaner and better code. All the points and ideas discussed below is my understanding of chapters 1 and 2 of the above mentioned book. If there's any suggestion or improvements feel free to reach out.
 
-Getting to the topic of this blog post: **why should we care about clean code?**. Thats a great question. Someone may ask why even bother spending extra time and efforts on improving or maintaining the existing code when the end user can only see the final product and not the code itself. We could use this time to build new things instead of improving the existing code (as long as it works), right?
+Getting to the topic of this blog post: **why should we care about clean code?**. That's a great question. Someone may ask why even bother spending extra time and efforts on improving or maintaining the existing code when the end user can only see the final product and not the code itself. We could use this time to build new things instead of improving the existing code (as long as it works), right?
 
 Lets explore the idea behind writing good code or **clean code**. But to write clean code, we have to understand what actually is clean code. To answer that, we'll start from the issue and move towards how clean code can help us solve it.
 
@@ -20,7 +20,7 @@ Lets explore the idea behind writing good code or **clean code**. But to write c
 
 3. **Acceptance and realisation.** Now we understand the downfalls of writing bad code and also the fact that the best way to meet those deadlines is by writing clean and maintainable code.
 
-4. **The big question.** Probably at this point you will be asking *“ok, but what do you mean by clean code?”*. Thats a good question because to write a clean code we should understand the meaning of it.
+4. **The big question.** Probably at this point you will be asking *“ok, but what do you mean by clean code?”*. That's a good question because to write a clean code we should understand the meaning of it.
 
 5. **Finally, what is clean code?** The best answer to this question that I found in the book is by Dave Thomas:
 > “Clean code can be read, and enhanced by a developer other than its original author. It has unit and acceptance tests. It has meaningful names. It provides one way rather than many ways for doing one thing. It has minimal dependencies, which are explicitly defined, and provides a clear and minimal API.” - Dave Thomas, founder of OTI.
