@@ -1,10 +1,10 @@
 # Site settings
-title: Shahbaz Ahmed
+title: Blog - Shahbaz Ahmed
 header-img: img/home-bg.jpg
 email: shahbazahmed1269@gmail.com
 copyright_name: Shahbaz Ahmed
-description: "My journey as a programmer"
-brand_name: "ahmedshahbaz.me"
+description: "My personal blog"
+brand_name: "Shahbaz Ahmed's Blog"
 repository: "https://github.com/shahbazahmed1269/shahbazahmed1269.github.io.git"
 #baseurl: ""
 url: "http://ahmedshahbaz.me"
