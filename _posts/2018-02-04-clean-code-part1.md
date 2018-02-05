@@ -8,13 +8,13 @@ comments: true
 ### Chapter 1: Why should we care about Clean Code
 Its been around 2 years since I started programming professionally. During this time I have worked with several languages and on several projects. Even though I can learn new things fast and switch between languages as per the requirement (thanks to Google, StackOverflow and all the awesome bloggers), I felt I had more to learn about writing understandable and elegant code. I thought maybe it would get better with more practice and experience. But one of the recent code review discussions led me to think **"what is the exact definition of "good" code?"** and **"is there any specification defining how to write good code?"**. I did some search and stumbled upon an excellent book **Clean Code** by **Robert Martin** or **uncle Bob** as we know him. This was just what I needed at that moment.
 
-After reading a couple of chapters, I thought it would be helpful to maintain concise notes highlighting the important points I get while reading this book. So my motivation behind this post is to share my learnings about writing cleaner and better code. All the points and ideas discussed below is my understanding of chapters 1 and 2 of the above mentioned book. If there's any suggestion or improvements feel free to reach out.
+After reading a couple of chapters, I thought it would be helpful to maintain concise notes highlighting the important points I get while reading this book. All the points and ideas discussed below is my understanding of chapters 1 and 2 of the above mentioned book. If there's any suggestion or improvements feel free to reach out.
 
-Getting to the topic of this blog post: **why should we care about clean code?**. That's a great question. Someone may ask why even bother spending extra time and efforts on improving or maintaining the existing code when the end user can only see the final product and not the code itself. We could use this time to build new things instead of improving the existing code (as long as it works), right?
+Getting back to the topic of this post: **why should we care about clean code?**. That's a great question. Someone may ask why even bother spending extra time and efforts on improving or maintaining the existing code when the end user can only see the final product and not the code itself. We could use this time to build new things instead of improving the existing code (as long as it works), right?
 
-Lets explore the idea behind writing good code or **clean code**. But to write clean code, we have to understand what actually is clean code. To answer that, we'll start from the issue and move towards how clean code can help us solve it.
+Lets explore the idea behind writing good code or **clean code**. But to write clean code, we have to understand what actually is clean code. To answer that, we'll start with the issue at hand and then move towards how clean code can help us solve it.
 
-1. **Bad code slows us down.** Martin explains that the productivity of development team decreases with the passage of time, eventually reaching zero. We (the developers) let bad code to degrade until the point when it is not possible to work on it. At this point a major refactor would be required.
+1. **Bad code slows us down.** Martin explains that the productivity of development team writing bad code decreases with the passage of time, eventually reaching zero. We (the developers) let bad code to degrade until the point when it is not possible to work on it. At this point a major refactor would be required.
 
 2. **Attitude.** Accepting that the mess is our (programmer’s) fault and not it's due to manager, deadline, customers, etc. Its our responsibility not to compromise on the quality of codebase due to pressure of delivering on schedule.
 
@@ -25,7 +25,7 @@ Lets explore the idea behind writing good code or **clean code**. But to write c
 5. **Finally, what is clean code?** The best answer to this question that I found in the book is by Dave Thomas:
 > “Clean code can be read, and enhanced by a developer other than its original author. It has unit and acceptance tests. It has meaningful names. It provides one way rather than many ways for doing one thing. It has minimal dependencies, which are explicitly defined, and provides a clear and minimal API.” - Dave Thomas, founder of OTI.
 
-The explanation is pretty much straight forward and covers most of the properties of a good code. In my opinion, **clean code is code which is easy to read and modify especially by other developers**
+The explanation is pretty much straight forward and covers most of the properties of a good code. In simpler words, **clean code is code which is easy to read and modify especially by other developers**. Writing clean code requires using lots of small techniques which contribute towards cleanliness of code. Applying these techniques can even turn bad code into good code.
 
 
 ### Chapter 2: Meaningful Names
