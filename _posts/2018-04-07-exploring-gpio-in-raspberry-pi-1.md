@@ -42,8 +42,6 @@ Resistor is required to dissipate the extra electrical energy voltage from Raspb
 
 Reference: [Raspberry Pi forum discussion](https://www.raspberrypi.org/forums/viewtopic.php?t=84240)
 
-
-
 ### Making the LED blink using python
 
 Now that we have a complete circuit, next part is to program the GPIO ports to make the magic happen i.e. to get the LED to blink.
