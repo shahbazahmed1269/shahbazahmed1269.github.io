@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Hello GPIO - Blinking LED using raspberry pi zero WH
+title: Hello GPIO - Blinking LED using Raspberry Pi zero WH
 header-img: ""
 comments: true
 ---
@@ -29,7 +29,7 @@ It is recommended to turn the Pi off while building the circuit. We'll now creat
 **Note**: The resistor in the image is of 220 ohm, but I have used 330 ohm in my circuit.
 1. Use a female to male jumper cable to connect `pin 6` (Ground) (black cables, see the image above) to the breadboard negative row. <br>
 2. Use another female to male jumper to connect to connect GPIO pin no. 25 to point represented by row `A` and column `12` in the breadboard shown above.<br>
-3. Connect one end of a 33 ohm **resistor** to the negative row (corresponding to the black cable, highlighted in green) and connect the other end to the point represented by row `C` column `11` in the breadboard as shown above.<br>
+3. Connect one end of a 330 ohm **resistor** to the negative row (corresponding to the black cable, highlighted in green) and connect the other end to the point represented by row `C` column `11` in the breadboard as shown above.<br>
 4. The shorter end of **LED** is negative end and longer is the positive end. The longer end should always be connected to the point in the circuit with higher voltage (i.e. higher potential). The shorter end of **LED** is connected to a GPIO `pin 25` (which can output 3.3V) via blue cable and longer end is connected to the ground `pin 6` (which is 0V and acts like the negative terminal of the battery) via black cable with resistor in between them.
 
 ### Resistor
@@ -40,7 +40,7 @@ Keeping in mind that I had taken introductory classes on electrical and electron
 
 Resistor is required to dissipate the extra electrical energy voltage from Raspberry Pi. Raspberry Pi is rated to supply 50mA at 3.3V and lets say our red LED can have forward voltage of around 2V and consumes 4mA current. So the remaining 1.3V should be dissipated by the resistor. So by Ohm's law, `V = IR` and hence `R` = `(3.3V - 2V) / (4/1000)` whih comes to around `325 ohms` and hence its recommended to use **330 ohm resistor**.
 
-Reference: (Raspberry pi forum discussion)[https://www.raspberrypi.org/forums/viewtopic.php?t=84240]
+Reference: [Raspberry Pi forum discussion](https://www.raspberrypi.org/forums/viewtopic.php?t=84240)
 
 
 
@@ -64,7 +64,7 @@ while True:
     sleep(1)
 {% endhighlight %}
 
-Now from terminal go the the directory where the script is saved and run it using command: `python3 gpio1.py`.<br>
+Now from terminal go the the directory where the script is saved and run it using command: `python3 blink1.py`.<br>
 You will see the red LED blinking, like this:
 
 ![Red LED blinking]({{ site.baseurl }}/img/pi-zero-led-blink.gif)
