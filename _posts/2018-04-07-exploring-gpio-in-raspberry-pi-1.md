@@ -38,7 +38,7 @@ Keeping in mind that I had taken introductory classes on electrical and electron
 1. Why do we need resistor in our circuit?
 2. How to determine what number of ohms of resistor should be used?
 
-Resistor is required to dissipate the extra electrical energy voltage from Raspberry Pi. Raspberry Pi is rated to supply 50mA at 3.3V and lets say our red LED can have forward voltage of around 2V and consumes 4mA current. So the remaining 1.3V should be dissipated by the resistor. So by Ohm's law, `V = IR` and hence `R` = `(3.3V - 2V) / (4/1000)` whih comes to around `325 ohms` and hence its recommended to use **330 ohm resistor**.
+Resistor is required to dissipate the extra electrical energy (voltage) from Raspberry Pi. Raspberry Pi is rated to supply 50mA at 3.3V and lets say our red LED can have forward voltage of around 2V and consumes 4mA current. So the remaining 1.3V should be dissipated by the resistor. So by Ohm's law, `V = IR` and hence `R` = `(3.3V - 2V) / (4/1000)` which comes to around `325 ohms` and hence its recommended to use **330 ohm resistor**.
 
 Reference: [Raspberry Pi forum discussion](https://www.raspberrypi.org/forums/viewtopic.php?t=84240)
 
