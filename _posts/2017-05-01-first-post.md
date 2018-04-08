@@ -7,7 +7,7 @@ comments: false
 Hi! Welcome to my blog. I created this blog to motivate myself to program regularly and share some of my experiences along the way.
 
 This is my fist post. I wanted to create [this blog](http://shahbazahmed.me) as a motivation to learn programming and share my experiences. Since my school days I have a habit of learning things better if I make notes of it. And hence blogging about whatever I learn would help me learn better and at the same time allow me to share my learnings. My interest lies in the following topics:
-`android, backend development and Golang`. In the future posts I would be sharing my learnings and experiences in various topics depending on whatever I am exploring at that moment. :smile:
+`backend development`, `golang`, `android development` and `raspberry pi`. In the future posts I would be sharing my learnings and experiences in various topics depending on whatever I am exploring at that moment. :smile:
 
 {% if page.comments %} 
    <div id="disqus_thread"></div>
