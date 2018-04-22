@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Hello GPIO - Blinking LED using Raspberry Pi zero WH
+title: Hello GPIO - Blinking an External LED using a Raspberry Pi adn GPIO pins
 header-img: ""
 comments: true
 ---
@@ -68,3 +68,4 @@ You will see the red LED blinking, like this:
 ![Red LED blinking]({{ site.baseurl }}/img/pi-zero-led-blink.gif)
 
 We can build lots of fun stuff using `gpiozero` and similar setup. Check out [the documentation page](https://gpiozero.readthedocs.io/en/stable/recipes.html) for `gpiozero` which demonstrates some interesting examples.
+ Try building a traffic light system.
