@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Four identity platforms, four different bets: how Alloy, Persona, Sardine, and AiPrise actually differ"
+header-img: "img/signal-verification-decisioning.jpg"
+---
+
 # Four identity platforms, four different bets: how Alloy, Persona, Sardine, and AiPrise actually differ
 
 If you're evaluating an identity platform, the vendor matrix you'll find online compares the wrong things — feature checklists, country counts, client logos. None of it tells you what actually decides it's compatibitity with your stack: what each company chose to be **strongest at**, and what are the tradeoffs.
