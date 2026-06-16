@@ -2,8 +2,7 @@
 layout: post
 title: "The 120-Second Swarm: How Claude Code Ate My 5-Hour Session Quota"
 date: 2026-06-16 17:00:00 +0530
-categories: [Engineering, AI]
-tags: [Claude Code, Anthropic, LLMOps, Post-Mortem]
+tags: [Claude-Code, Agentic-AI, LLMOps, Post-Mortem]
 ---
 
 Software has always had its classic failure modes — infinite loops and recursive calls. We learn to spot them. But agentic development has introduced an entirely new kind of failure modes. I am calling this particular variant the **Parallel Agent Fan-Out Explosion**.
@@ -12,15 +11,15 @@ I was exploring AI agents in `claude-code` when it asked for permission to use t
 
 When I checked the usage metrics, it looked less like a focused research task and more like a distributed load test:
 
-| Metric          | Value         |
-|-----------------|---------------|
-| Input Tokens    | 22.8 million  |
-| Output Tokens   | 2.3 million   |
-| Cache Reads     | 32.7 million  |
-| Cache Writes    | 5.7 million   |
-| Web Searches    | 1,504         |
-| Web Fetches     | 1,640         |
-| Cost Equivalent | ~$59.25       |
+| Metric          | Value        |
+| --------------- | ------------ |
+| Input Tokens    | 22.8 million |
+| Output Tokens   | 2.3 million  |
+| Cache Reads     | 32.7 million |
+| Cache Writes    | 5.7 million  |
+| Web Searches    | 1,504        |
+| Web Fetches     | 1,640        |
+| Cost Equivalent | ~$59.25      |
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -85,7 +84,7 @@ Each subagent gets a `meta.json` alongside its transcript. It stores the task de
 
 **Subagent JSONL files**
 
-Structurally identical to the main session JSONL — same format, same tool call schema. Because each subagent has its own isolated context window and its own file, the parent session transcript only records the `Task`/`Agent` spawn event; all intermediate tool calls made *by* the subagent are in the subagent's own file.
+Structurally identical to the main session JSONL — same format, same tool call schema. Because each subagent has its own isolated context window and its own file, the parent session transcript only records the `Task`/`Agent` spawn event; all intermediate tool calls made _by_ the subagent are in the subagent's own file.
 
 This is why a tool call count against the parent JSONL alone returns zero for subagent activity — you have to `cat` across the entire `subagents/` directory to get the true picture.
 
@@ -128,7 +127,7 @@ Claude Code stores every session as structured JSONL files under `~/.claude/proj
 
 That `969 Agent` line is the part that matters most. This was not a single-level fan-out. **Subagents were spawning their own subagents.** The orchestrator spun up 949 top-level workers; those workers then spawned further agents to handle sub-tasks, each independently loading tools, executing searches, and fetching pages.
 
-Haiku 4.5 was released in October 2025 and is [designed for exactly this role](https://www.anthropic.com/news/claude-haiku-4-5) — high-throughput, parallel sub-agent execution, running four to five times faster than Sonnet on typical workloads. When deployed as an unconstrained orchestrator *and* executor with no depth or breadth limits, that throughput becomes an accelerant. It does not bottleneck. It just keeps going.
+Haiku 4.5 was released in October 2025 and is [designed for exactly this role](https://www.anthropic.com/news/claude-haiku-4-5) — high-throughput, parallel sub-agent execution, running four to five times faster than Sonnet on typical workloads. When deployed as an unconstrained orchestrator _and_ executor with no depth or breadth limits, that throughput becomes an accelerant. It does not bottleneck. It just keeps going.
 
 Each subagent initialised its own system tools baseline (~14.6k tokens), then immediately started firing web queries. Multiply that across 949 instances, add recursive nesting, and 1,500+ searches in 120 seconds becomes straightforward arithmetic.
 
@@ -181,10 +180,7 @@ Create or edit `~/.claude/settings.json`:
 ```json
 {
   "permissions": {
-    "ask": [
-      "WebSearch",
-      "WebFetch"
-    ]
+    "ask": ["WebSearch", "WebFetch"]
   },
   "maxSearches": 20,
   "maxToolCalls": 50
@@ -195,14 +191,15 @@ With this in place, every web search and every page fetch triggers a confirmatio
 
 ### How the two layers interact
 
-| Layer | Mechanism | What It Controls |
-|---|---|---|
+| Layer      | Mechanism                   | What It Controls                                       |
+| ---------- | --------------------------- | ------------------------------------------------------ |
 | Behavioral | `CLAUDE.md` Research Policy | Shapes the orchestrator's plan before execution begins |
-| Runtime | `settings.json` limits | Stops the process if the plan exceeds your thresholds |
+| Runtime    | `settings.json` limits      | Stops the process if the plan exceeds your thresholds  |
 
 `CLAUDE.md` is the operating procedure. `settings.json` is the circuit breaker. You want both — the policy prevents most runaway scenarios from starting; the circuit breaker catches the ones that slip through.
 
 ## Summary
+
 <a id="summary"></a>
 
 The failure here was not a bug and it was not a deficiency in Haiku 4.5. The `/deep-research` feature worked exactly as designed by spawning multiple sub-agents. What was missing was any limit on how much it was authorised to do.
