@@ -6,13 +6,7 @@ categories: [Engineering, AI]
 tags: [Claude Code, Anthropic, LLMOps, Post-Mortem]
 ---
 
-Software has always had its classic failure modes — a loop that never exits, a function that calls itself forever until the stack gives up. You learn to spot them. But agentic development has introduced an entirely new kind of engineering jumpscare.
-
-> **Engineering jumpscare:** everything looks fine — no errors, no warnings, the process is running — and then you glance at your usage metrics and realise the bill has already happened. The system did not fail. It succeeded, at a scale you never authorised.
-
-I am calling this particular variant the **Parallel Agent Fan-Out Explosion**.
-
----
+Software has always had its classic failure modes — infinite loops and recursive calls. We learn to spot them. But agentic development has introduced an entirely new kind of failure modes. I am calling this particular variant the **Parallel Agent Fan-Out Explosion**.
 
 I was exploring AI agents in `claude-code` when it asked for permission to use the deep-research tool. Seemed reasonable. I approved it just for the current session and turned back to my other work. The session was dead before I looked up. My 5-hour Session Quota exhausted.
 
@@ -91,7 +85,7 @@ Each subagent gets a `meta.json` alongside its transcript. It stores the task de
 
 **Subagent JSONL files**
 
-Structurally identical to the main session JSONL — same turn-by-turn format, same tool call schema. Because each subagent has its own isolated context window and its own file, the parent session transcript only records the `Task`/`Agent` spawn event; all intermediate tool calls made *by* the subagent are in the subagent's own file.
+Structurally identical to the main session JSONL — same format, same tool call schema. Because each subagent has its own isolated context window and its own file, the parent session transcript only records the `Task`/`Agent` spawn event; all intermediate tool calls made *by* the subagent are in the subagent's own file.
 
 This is why a tool call count against the parent JSONL alone returns zero for subagent activity — you have to `cat` across the entire `subagents/` directory to get the true picture.
 
