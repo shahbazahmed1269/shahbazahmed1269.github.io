@@ -2,7 +2,7 @@
 /* from http://stackoverflow.com/a/23393920 */
 
 .highlight pre code * {
-  white-space: nowrap;    // this sets all children inside to nowrap
+  white-space: inherit;   /* inherit pre's white-space so children don't collapse to one line */
 }
 
 .highlight pre {

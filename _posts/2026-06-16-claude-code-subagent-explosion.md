@@ -177,30 +177,92 @@ Note the last line. Given that subagents here were spawning their own subagents,
 
 ### Layer 2: The Runtime Wall — `~/.claude/settings.json`
 
-`CLAUDE.md` can be misinterpreted or overridden by the model's own planning. `settings.json` cannot — it is enforced by the binary itself and halts execution the moment a threshold is breached.
+`CLAUDE.md` can be misinterpreted or overridden by the model's own planning. The runtime layer cannot — it is enforced by the binary regardless of what the model decides.
 
-Create or edit `~/.claude/settings.json`:
+This layer has two parts.
+
+**Part A — Approval gate (`settings.json`)**
+
+Add `WebSearch` and `WebFetch` to the `ask` permissions list. This forces a confirmation prompt before every web operation — the process cannot fire off 3,000+ combined calls silently.
+
+```json
+{
+  "permissions": {
+    "ask": ["WebSearch", "WebFetch"]
+  }
+}
+```
+
+> **Note:** `maxSearches` and `maxToolCalls` are not valid `settings.json` keys — they are silently ignored. The approval gate above is the correct mechanism in settings.json for web tool control.
+
+**Part B — Hard count ceiling (Hooks)**
+
+For a true hard cap on cumulative tool calls, you need a [`PreToolUse` hook](https://code.claude.com/docs/en/hooks). Hooks fire before every tool execution and can block with exit code `2` — deterministic enforcement that the model cannot override.
+
+Create the counter script at `~/.claude/hooks/limit_searches.sh`:
+
+```bash
+#!/bin/bash
+# Hard cap: block WebSearch and WebFetch after 20 combined calls per session.
+#
+# session_id arrives via stdin JSON, not as an env var.
+# Namespace the counter file by session so concurrent sessions don't share state.
+
+INPUT=$(cat)
+SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "default"')
+COUNTER_FILE="/tmp/claude_search_count_${SESSION_ID}"
+COUNT=$(cat "$COUNTER_FILE" 2>/dev/null || echo 0)
+
+if [ "$COUNT" -ge 20 ]; then
+  # exit 2 = block this tool call (Claude Code convention, not standard Unix)
+  echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Search limit reached (20). Summarise findings so far and ask for permission to continue."}}'
+  exit 2
+fi
+
+echo $((COUNT + 1)) > "$COUNTER_FILE"
+exit 0
+```
+
+Make it executable:
+
+```bash
+chmod +x ~/.claude/hooks/limit_searches.sh
+```
+
+Then wire it up in `~/.claude/settings.json`:
 
 ```json
 {
   "permissions": {
     "ask": ["WebSearch", "WebFetch"]
   },
-  "maxSearches": 20,
-  "maxToolCalls": 50
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "WebSearch|WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/hooks/limit_searches.sh"
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 
-With this in place, every web search and every page fetch triggers a confirmation prompt. The process cannot fire off 3,000+ combined search-and-fetch operations silently.
+The counter file is keyed to `CLAUDE_SESSION_ID` so it resets cleanly between sessions. When the limit is hit, the hook blocks the tool call and surfaces the reason to the model, which then stops and reports back to you.
 
-### How the two layers interact
+### How the layers interact
 
-| Layer      | Mechanism                   | What It Controls                                       |
-| ---------- | --------------------------- | ------------------------------------------------------ |
-| Behavioral | `CLAUDE.md` Research Policy | Shapes the orchestrator's plan before execution begins |
-| Runtime    | `settings.json` limits      | Stops the process if the plan exceeds your thresholds  |
+| Layer         | Mechanism                       | What It Controls                                       |
+| ------------- | ------------------------------- | ------------------------------------------------------ |
+| Behavioral    | `CLAUDE.md` Research Policy     | Shapes the orchestrator's plan before execution begins |
+| Approval gate | `settings.json` ask permissions | Prompts for confirmation on every web call             |
+| Hard ceiling  | `PreToolUse` hook with counter  | Blocks tool calls once cumulative limit is hit         |
 
-`CLAUDE.md` is the operating procedure. `settings.json` is the circuit breaker. You want both — the policy prevents most runaway scenarios from starting; the circuit breaker catches the ones that slip through.
+`CLAUDE.md` is the operating procedure. The approval gate is the speed bump. The hook is the circuit breaker. In this incident, any one of these three would have prevented the full quota burn — together they make a runaway scenario very hard to trigger accidentally.
 
 ## Summary
 
