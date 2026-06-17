@@ -88,6 +88,10 @@ Structurally identical to the main session JSONL — same format, same tool call
 
 This is why a tool call count against the parent JSONL alone returns zero for subagent activity — you have to `cat` across the entire `subagents/` directory to get the true picture.
 
+**One more thing worth knowing about what you're looking at**
+
+All of this infrastructure — the session storage, permission gates, context compaction, tool routing, retry logic — turns out to be most of what Claude Code actually is. A [46-page study](https://arxiv.org/html/2604.14228v1) that reverse-engineered Claude Code's TypeScript source (accidentally shipped with its full source map in the npm package) found that only 1.6% of the codebase is AI decision logic. The other 98.4% is deterministic operational infrastructure. The core reasoning loop is a single `while (true)` in `query.ts` with a model call inside. That's the AI part. Everything else — including the session files you're reading — is the harness around it.
+
 ---
 
 ## Root Cause: The Anatomy of a Subagent Explosion
