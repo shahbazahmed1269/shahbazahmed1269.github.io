@@ -2,9 +2,9 @@
 layout: post
 title: "Streams Are Not Queues"
 date: 2026-07-23
-categories: [engineering, architecture, fintech]
+categories: [architecture]
 tags: [kafka, sqs, event-streaming, job-queues, system-design]
-excerpt: "A retry storm, a stuck consumer group, and the night our team finally understood why Kafka and SQS aren't interchangeable. Told through a fintech payments incident."
+excerpt: "A retry storm, a stuck consumer group, and the night the team finally understood why Kafka and SQS aren't always interchangeable. Told through a fintech payments incident."
 ---
 
 ## 02:47 UTC
@@ -98,16 +98,16 @@ Every record tracks its own receive count automatically. Fail five times, SQS mo
 
 ![Kafka's manual retry-topic-chain requiring custom producers, consumers, and counters vs SQS's native RedrivePolicy config]({{ site.baseurl }}/img/stream-vs-queues/retry-complexity-diagram.svg)
 
-Each arrow in that Kafka chain is a producer, a consumer, a schema, and a schedule that your team writes, tests, and pages for. And none of it fixes partition 3's actual problem. The retry-topic pattern moves the _retry_ off the main topic, but a classic consumer group still can't skip one poison record mid-partition without somebody doing it by hand.
+Each arrow in that Kafka chain is a producer, a consumer, a schema, and a schedule that your team needs to maintain.
 
-|                          | **SQS**                                               | **Kafka (classic consumer group)**                        |
-| ------------------------ | ----------------------------------------------------- | --------------------------------------------------------- |
-| Ordering                 | Best-effort (standard) or FIFO with throughput limits | Guaranteed within a partition                             |
-| Retry mechanism          | Automatic via visibility timeout                      | Manual: produce to retry topics, sleep/reschedule         |
-| Attempt tracking         | Built-in `ApproximateReceiveCount`                    | Self-managed header your code writes and checks           |
-| Poison-message isolation | Per-record: one bad record never blocks another       | Per-partition: one bad record stalls everything behind it |
-| DLQ routing              | Declarative config (`RedrivePolicy`)                  | A topic you create and route to in application code       |
-| Custom code required     | None for the retry/DLQ path                           | Producers, consumers, schedulers, counters per hop        |
+|                          | **SQS**                                               | **Kafka (classic consumer group)**                                       |
+| ------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------ |
+| Ordering                 | Best-effort (standard) or FIFO with throughput limits | Guaranteed within a partition                                            |
+| Retry mechanism          | Automatic via visibility timeout                      | Build it at application layer: produce to retry topics, sleep/reschedule |
+| Attempt tracking         | Built-in `ApproximateReceiveCount`                    | Self-managed header your code writes and checks                          |
+| Poison-message isolation | Per-record: one bad record never blocks another       | Per-partition: one bad record stalls everything behind it                |
+| DLQ routing              | Declarative config (`RedrivePolicy`)                  | A topic you create and route to in application code                      |
+| Custom code required     | None for the retry/DLQ path                           | Producers, consumers, schedulers, counters per hop                       |
 
 Now here's the side-by-side of what Riya's night _would_ have looked like if the retry job had been on SQS instead:
 
@@ -117,7 +117,7 @@ On SQS, the same malformed record would have bounced through the visibility time
 
 ## The honest counterargument: "we already run Kafka"
 
-It would be wrong to frame this as a simple "Kafka bad, SQS good" takeaway. Riya's team wasn't foolish to reach for Kafka. Sticking with infrastructure you already operate, monitor, and trust is a real argument. A second messaging system means more secrets to rotate, more dashboards to build, more failure modes to train new hires on.
+It's not a simple "Kafka bad, SQS good" takeaway. Riya's team wasn't foolish to reach for Kafka. Sticking with infrastructure you already operate, monitor, and trust is a real argument. A second messaging system means more secrets to rotate, more dashboards to build, more failure modes to train new hires on.
 
 And the gap is closing. Kafka 4.2 (released February 2026) shipped **share groups** as a GA feature via KIP-932. Share groups let multiple consumers pull from the same partition cooperatively, and each consumer explicitly acknowledges individual records as `accept`, `release` (put it back for retry), or `reject` (mark it as unprocessable). Delivery attempts are tracked per-record, not per-partition. That's a genuine structural change, and it solves the core isolation problem that burned Riya.
 
@@ -131,13 +131,15 @@ Will more than one system need its own independent read through the same history
 
 Is the job really just "do this thing, try again if it fails, give up after N attempts"? Could the tasks run in any order without breaking correctness? Then it's a queue: single-owner, delete-on-success, dead-letter on failure. SQS, RabbitMQ, or a Postgres SKIP LOCKED table will all do it, and they've been doing it for years.
 
-If the answer is "both" (and in a fintech payments system, it usually is), that's not a contradiction. It's a sign you need the same event feeding a stream for observability and a queue for task execution. Two systems, each doing the job it was shaped for.
+If the answer is "both" (and in a fintech payments system, it usually is), that's not a contradiction. It's a sign you need the same event feeding a stream for event streaming usecase and a queue for task execution. Two systems, each doing the job it was shaped for.
 
-## Six weeks later
+## Few weeks later
 
-Riya's team kept `payment.events` on Kafka. The ledger, fraud scoring, and analytics services still read it independently, and the fraud team replayed six months of history into a new model without touching production. That part was never the problem.
+The page itself didn't need a migration to fix. The actual bug was narrower: the consumer retried the same offset forever and never committed past it, win or lose. The fix that went out the next day was a small one — catch the exception, check the attempt count already carried by the retry-topic name, and either forward to the DLQ topic and commit the offset. That alone stopped partition 3 from blocking anything behind it. No new infrastructure, just a consumer that gives up correctly instead of looping forever.
 
-Payment retries moved to SQS. The DLQ collects whatever fails, reviewed every Monday, nobody paged at 3 AM. The migration was about forty lines of infrastructure-as-code and a week of shadowing both paths in parallel.
+That fix was enough to stop the paging. What it didn't fix was the maintenance cost: a hand-rolled chain of `retry-5s` / `retry-1m` / `retry-10m` / DLQ topics, a header-based attempt counter every consumer had to check, and a producer for each hop. Riya's team spent the following weeks deciding whether that cost was worth carrying long-term, and concluded it wasn't — for payment retries specifically, where ordering never mattered in the first place.
+
+So `payment.events` stayed exactly where it was: Kafka, six partitions, read independently by the ledger, fraud, and analytics services, replayed once when the fraud model needed six months of history to retrain on. Payment retries moved to SQS a few weeks later, as a deliberate simplification rather than an emergency fix — the retry worker was rewritten around SQS's poll-and-delete model, made idempotent against SQS's occasional duplicate delivery, and shadow-run against the old path for a week before the cutover. The DLQ now collects whatever fails, reviewed every Monday, with no custom retry-topic code left to maintain.
 
 The week after cutover, a new malformed currency code came through. The SQS queue bounced it five times, parked it in the DLQ, and nobody's phone buzzed. Riya saw it Monday morning in the review, fixed the upstream validation, and closed the ticket before lunch.
 
