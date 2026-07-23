@@ -1,0 +1,48 @@
+<svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect width="900" height="380" fill="#0f172a" rx="12"/>
+  <text x="450" y="40" fill="#e2e8f0" font-size="20" font-weight="700" text-anchor="middle">A Kafka Partition Is a Retained, Ordered Log</text>
+
+  <!-- Partition 0 -->
+  <text x="40" y="90" fill="#94a3b8" font-size="14" font-weight="600">partition-0</text>
+  <g>
+    <rect x="40" y="100" width="60" height="50" fill="#1e293b" stroke="#334155"/>
+    <rect x="100" y="100" width="60" height="50" fill="#1e293b" stroke="#334155"/>
+    <rect x="160" y="100" width="60" height="50" fill="#1e293b" stroke="#334155"/>
+    <rect x="220" y="100" width="60" height="50" fill="#1e293b" stroke="#334155"/>
+    <rect x="280" y="100" width="60" height="50" fill="#334155" stroke="#475569" stroke-dasharray="4 3"/>
+    <text x="70" y="130" fill="#7dd3fc" font-size="13" text-anchor="middle">0</text>
+    <text x="130" y="130" fill="#7dd3fc" font-size="13" text-anchor="middle">1</text>
+    <text x="190" y="130" fill="#7dd3fc" font-size="13" text-anchor="middle">2</text>
+    <text x="250" y="130" fill="#fbbf24" font-size="13" text-anchor="middle">3 ◄ fraud-svc</text>
+    <text x="310" y="130" fill="#64748b" font-size="11" text-anchor="middle">…</text>
+  </g>
+  <text x="70" y="132" fill="transparent">.</text>
+
+  <!-- Partition 1 -->
+  <text x="40" y="190" fill="#94a3b8" font-size="14" font-weight="600">partition-1</text>
+  <g>
+    <rect x="40" y="200" width="60" height="50" fill="#1e293b" stroke="#334155"/>
+    <rect x="100" y="200" width="60" height="50" fill="#1e293b" stroke="#334155"/>
+    <rect x="160" y="200" width="60" height="50" fill="#334155" stroke="#475569" stroke-dasharray="4 3"/>
+    <rect x="220" y="200" width="60" height="50" fill="#1e293b" stroke="#334155"/>
+    <text x="70" y="230" fill="#7dd3fc" font-size="13" text-anchor="middle">0</text>
+    <text x="130" y="230" fill="#7dd3fc" font-size="13" text-anchor="middle">1</text>
+    <text x="190" y="230" fill="#fbbf24" font-size="13" text-anchor="middle">2 ◄ ledger-svc</text>
+    <text x="250" y="230" fill="#7dd3fc" font-size="13" text-anchor="middle">3</text>
+  </g>
+
+  <text x="500" y="150" fill="#cbd5e1" font-size="13" width="360">
+    <tspan x="500" dy="0">Every consumer group reads the</tspan>
+    <tspan x="500" dy="18">same offsets independently.</tspan>
+    <tspan x="500" dy="18">Nothing is deleted on read —</tspan>
+    <tspan x="500" dy="18">events sit in the log until</tspan>
+    <tspan x="500" dy="18">retention expires. A new</tspan>
+    <tspan x="500" dy="18">consumer group can rewind</tspan>
+    <tspan x="500" dy="18">to offset 0 and replay history.</tspan>
+  </text>
+
+  <line x1="40" y1="290" x2="860" y2="290" stroke="#334155" stroke-width="1"/>
+
+  <text x="450" y="320" fill="#e2e8f0" font-size="16" font-weight="700" text-anchor="middle">One partition → one consumer in the group</text>
+  <text x="450" y="345" fill="#94a3b8" font-size="13" text-anchor="middle">Parallelism inside a consumer group is capped by partition count, not by worker count.</text>
+</svg>

@@ -1,0 +1,85 @@
+<svg viewBox="0 0 940 520" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect width="940" height="520" fill="#0b1220" rx="12"/>
+  <text x="470" y="36" fill="#e2e8f0" font-size="18" font-weight="700" text-anchor="middle">One Poison Message, Two Very Different Nights</text>
+  <text x="470" y="56" fill="#64748b" font-size="12" text-anchor="middle">A malformed payment record hits each system at 02:36 UTC. Here's what happens next.</text>
+
+  <!-- divider -->
+  <line x1="470" y1="72" x2="470" y2="505" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- SQS column header -->
+  <text x="235" y="90" fill="#4ade80" font-size="15" font-weight="700" text-anchor="middle">SQS</text>
+
+  <!-- Kafka column header -->
+  <text x="705" y="90" fill="#f87171" font-size="15" font-weight="700" text-anchor="middle">Kafka (classic consumer group)</text>
+
+  <!-- Timeline dots + lines -->
+  <!-- SQS side -->
+  <circle cx="50" cy="125" r="5" fill="#4ade80"/>
+  <line x1="50" y1="130" x2="50" y2="185" stroke="#334155" stroke-width="1"/>
+  <text x="65" y="120" fill="#94a3b8" font-size="10">02:36</text>
+  <text x="65" y="134" fill="#e2e8f0" font-size="11">Worker A picks up msg-4821.</text>
+  <text x="65" y="148" fill="#64748b" font-size="10">Visibility timeout starts (30s).</text>
+
+  <circle cx="50" cy="195" r="5" fill="#4ade80"/>
+  <line x1="50" y1="200" x2="50" y2="255" stroke="#334155" stroke-width="1"/>
+  <text x="65" y="190" fill="#94a3b8" font-size="10">02:36 + 2s</text>
+  <text x="65" y="204" fill="#e2e8f0" font-size="11">Worker A throws, doesn't delete.</text>
+  <text x="65" y="218" fill="#64748b" font-size="10">All other messages keep flowing.</text>
+
+  <circle cx="50" cy="265" r="5" fill="#4ade80"/>
+  <line x1="50" y1="270" x2="50" y2="325" stroke="#334155" stroke-width="1"/>
+  <text x="65" y="260" fill="#94a3b8" font-size="10">02:37 – 02:42</text>
+  <text x="65" y="274" fill="#e2e8f0" font-size="11">Timeout expires, msg reappears.</text>
+  <text x="65" y="288" fill="#64748b" font-size="10">Workers B, C, D each try and fail.</text>
+  <text x="65" y="302" fill="#64748b" font-size="10">receiveCount climbs to 5.</text>
+
+  <circle cx="50" cy="335" r="5" fill="#fbbf24"/>
+  <line x1="50" y1="340" x2="50" y2="395" stroke="#334155" stroke-width="1"/>
+  <text x="65" y="330" fill="#94a3b8" font-size="10">02:42</text>
+  <text x="65" y="344" fill="#fbbf24" font-size="11">SQS moves msg to DLQ.</text>
+  <text x="65" y="358" fill="#64748b" font-size="10">No code involved. Automatic.</text>
+
+  <circle cx="50" cy="405" r="5" fill="#4ade80"/>
+  <text x="65" y="400" fill="#94a3b8" font-size="10">02:42 onward</text>
+  <text x="65" y="414" fill="#e2e8f0" font-size="11">Queue is clean. Zero lag.</text>
+  <text x="65" y="428" fill="#64748b" font-size="10">DLQ reviewed Monday morning.</text>
+
+  <rect x="30" y="450" width="420" height="38" rx="6" fill="#052e16" stroke="#166534"/>
+  <text x="240" y="470" fill="#86efac" font-size="12" text-anchor="middle">No pages. No human in the loop. No other message affected.</text>
+  <text x="240" y="484" fill="#86efac" font-size="11" text-anchor="middle">Total disruption: 6 minutes, contained to 1 message.</text>
+
+  <!-- Kafka side -->
+  <circle cx="520" cy="125" r="5" fill="#f87171"/>
+  <line x1="520" y1="130" x2="520" y2="185" stroke="#334155" stroke-width="1"/>
+  <text x="535" y="120" fill="#94a3b8" font-size="10">02:36</text>
+  <text x="535" y="134" fill="#e2e8f0" font-size="11">Consumer reads offset 9201 on partition 3.</text>
+  <text x="535" y="148" fill="#64748b" font-size="10">Throws CurrencyCodeException.</text>
+
+  <circle cx="520" cy="195" r="5" fill="#f87171"/>
+  <line x1="520" y1="200" x2="520" y2="255" stroke="#334155" stroke-width="1"/>
+  <text x="535" y="190" fill="#94a3b8" font-size="10">02:36 + 2s</text>
+  <text x="535" y="204" fill="#e2e8f0" font-size="11">Consumer retries same offset. Throws again.</text>
+  <text x="535" y="218" fill="#64748b" font-size="10">Offset 9202, 9203, 9204... all waiting.</text>
+
+  <circle cx="520" cy="265" r="5" fill="#f87171"/>
+  <line x1="520" y1="270" x2="520" y2="325" stroke="#334155" stroke-width="1"/>
+  <text x="535" y="260" fill="#94a3b8" font-size="10">02:36 – 02:47</text>
+  <text x="535" y="274" fill="#e2e8f0" font-size="11">Same offset, same exception, every loop.</text>
+  <text x="535" y="288" fill="#64748b" font-size="10">Partition 3 lag: 0 → 340,000.</text>
+  <text x="535" y="302" fill="#64748b" font-size="10">Other partitions: fine.</text>
+
+  <circle cx="520" cy="335" r="5" fill="#fbbf24"/>
+  <line x1="520" y1="340" x2="520" y2="395" stroke="#334155" stroke-width="1"/>
+  <text x="535" y="330" fill="#94a3b8" font-size="10">02:47</text>
+  <text x="535" y="344" fill="#fbbf24" font-size="11">PagerDuty fires. Riya wakes up.</text>
+  <text x="535" y="358" fill="#64748b" font-size="10">She SSH's in, skips the offset by hand.</text>
+
+  <circle cx="520" cy="405" r="5" fill="#f87171"/>
+  <text x="535" y="400" fill="#94a3b8" font-size="10">04:15</text>
+  <text x="535" y="414" fill="#e2e8f0" font-size="11">Lag drains. Riya goes back to bed.</text>
+  <text x="535" y="428" fill="#64748b" font-size="10">Poison msg: lost (skipped), not parked.</text>
+
+  <rect x="500" y="450" width="420" height="38" rx="6" fill="#450a0a" stroke="#7f1d1d"/>
+  <text x="710" y="470" fill="#fca5a5" font-size="12" text-anchor="middle">One 3 AM page. One human offset skip. Hours of blocked payments.</text>
+  <text x="710" y="484" fill="#fca5a5" font-size="11" text-anchor="middle">Total disruption: 99 minutes, affected every msg on partition 3.</text>
+</svg>

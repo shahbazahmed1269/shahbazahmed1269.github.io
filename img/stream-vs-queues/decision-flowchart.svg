@@ -1,0 +1,58 @@
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect width="900" height="500" fill="#0f172a" rx="12"/>
+  <text x="450" y="40" fill="#e2e8f0" font-size="20" font-weight="700" text-anchor="middle">Stream or Queue? Three Questions</text>
+
+  <!-- Q1: ordering -->
+  <rect x="300" y="65" width="300" height="50" rx="10" fill="#1e293b" stroke="#475569"/>
+  <text x="450" y="95" fill="#e2e8f0" font-size="13" text-anchor="middle">Does processing order affect correctness?</text>
+
+  <path d="M380 115 L220 160" stroke="#4ade80" stroke-width="2" marker-end="url(#a1)"/>
+  <text x="280" y="135" fill="#4ade80" font-size="12">yes</text>
+
+  <path d="M520 115 L680 160" stroke="#94a3b8" stroke-width="2" marker-end="url(#a4)"/>
+  <text x="620" y="135" fill="#94a3b8" font-size="12">no</text>
+
+  <!-- Q2: replay/multi-reader (left branch) -->
+  <rect x="70" y="160" width="300" height="50" rx="10" fill="#1e293b" stroke="#475569"/>
+  <text x="220" y="180" fill="#e2e8f0" font-size="12" text-anchor="middle">Multiple independent readers, replay,</text>
+  <text x="220" y="196" fill="#e2e8f0" font-size="12" text-anchor="middle">or audit trail needed?</text>
+
+  <path d="M220 210 L220 250" stroke="#4ade80" stroke-width="2" marker-end="url(#a1)"/>
+  <text x="230" y="235" fill="#4ade80" font-size="12">yes</text>
+
+  <!-- stream result -->
+  <rect x="70" y="250" width="300" height="80" rx="10" fill="#052e16" stroke="#166534"/>
+  <text x="220" y="278" fill="#4ade80" font-size="16" font-weight="700" text-anchor="middle">STREAM</text>
+  <text x="220" y="298" fill="#86efac" font-size="11" text-anchor="middle">Kafka · ordered · retained · replayable</text>
+  <text x="220" y="314" fill="#86efac" font-size="11" text-anchor="middle">Ledger events, fraud signals, KYC audit trail</text>
+
+  <!-- Q3: right branch — run-once? -->
+  <rect x="530" y="160" width="300" height="50" rx="10" fill="#1e293b" stroke="#475569"/>
+  <text x="680" y="180" fill="#e2e8f0" font-size="12" text-anchor="middle">Run once, retry on failure,</text>
+  <text x="680" y="196" fill="#e2e8f0" font-size="12" text-anchor="middle">dead-letter after N attempts?</text>
+
+  <path d="M680 210 L680 250" stroke="#fbbf24" stroke-width="2" marker-end="url(#a3)"/>
+  <text x="690" y="235" fill="#fbbf24" font-size="12">yes</text>
+
+  <!-- queue result -->
+  <rect x="530" y="250" width="300" height="80" rx="10" fill="#450a0a" stroke="#7f1d1d"/>
+  <text x="680" y="278" fill="#fca5a5" font-size="16" font-weight="700" text-anchor="middle">QUEUE</text>
+  <text x="680" y="298" fill="#fca5a5" font-size="11" text-anchor="middle">SQS · RabbitMQ · Postgres SKIP LOCKED</text>
+  <text x="680" y="314" fill="#fca5a5" font-size="11" text-anchor="middle">Payment retries, webhook delivery, email sends</text>
+
+  <!-- both box -->
+  <path d="M320 330 L450 375" stroke="#7dd3fc" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <path d="M580 330 L450 375" stroke="#7dd3fc" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <rect x="280" y="375" width="340" height="55" rx="10" fill="#1e293b" stroke="#334155"/>
+  <text x="450" y="398" fill="#7dd3fc" font-size="13" font-weight="600" text-anchor="middle">If the answer is "both"</text>
+  <text x="450" y="416" fill="#94a3b8" font-size="11" text-anchor="middle">Same event → stream for observability, queue for task execution.</text>
+
+  <text x="450" y="465" fill="#64748b" font-size="11" text-anchor="middle">"We already run Kafka" is a real operational argument — just know you're trading</text>
+  <text x="450" y="481" fill="#64748b" font-size="11" text-anchor="middle">isolation and retry semantics for the convenience of one broker.</text>
+
+  <defs>
+    <marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4ade80"/></marker>
+    <marker id="a3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#fbbf24"/></marker>
+    <marker id="a4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#94a3b8"/></marker>
+  </defs>
+</svg>
