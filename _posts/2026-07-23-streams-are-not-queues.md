@@ -35,9 +35,9 @@ Riya had used Kafka for three years. She could explain partitioning to a new hir
 
 A **stream** answers: _what happened, in what order, and who else needs to know about it?_
 
-A **queue** answers: _here's a task. Do it once. Tell me if it didn't work. The order doesn't matter much._
+A **queue** answers: _here's a task. let any free worker take it and tell me if it failed. Ordering is optional (for example: SQS FIFO queues) and you pay for it if you want it._
 
-That second part is easy to miss. A stream _guarantees_ ordering within a partition. A queue deliberately trades ordering away so that any available worker can grab any available record. That trade-off is why queues can isolate a single poison message while streams can't, and it's also why you'd never want a queue processing your ledger postings, where "debit before credit" matters.
+That second part is easy to miss. A stream _guarantees_ ordering within a partition. A queue lets you trade ordering away so that any available worker can grab any available record (some messaging queues provide it as a configurable property). That trade-off is why queues can isolate a single poison message while streams can't, and it's also why you'd never want a queue processing your ledger postings, where "debit before credit" matters.
 
 Mix the two up and you don't get a slower system. You get what Riya got at 02:47: a task-shaped problem stuffed into a stream-shaped system, with none of the guardrails a real queue would have provided out of the box.
 
@@ -55,7 +55,7 @@ Kafka's own project maintainers described this gap when they wrote KIP-932, the 
 
 ## What a queue does instead
 
-A queue makes a much narrower promise, and it makes a deliberate sacrifice to get there: it gives up strict ordering. A worker pulls a record. While it's being processed, nobody else can see it (it's checked out, not gone). The worker finishes and deletes it. If the worker crashes before the delete happens, the checkout expires after a timeout and the record becomes visible again for the next available worker — which might not be the same worker, and might process it out of the original sequence. The system counts how many times this has happened, and after a threshold, parks the record in a dead-letter queue.
+A queue makes a much narrower promise, and it makes a deliberate sacrifice to get there: it gives up strict ordering by default. A worker pulls a record. While it's being processed, nobody else can see it (it's checked out, not gone). The worker finishes and deletes it. If the worker crashes before the delete happens, the checkout expires after a timeout and the record becomes visible again for the next available worker — which might not be the same worker, and might process it out of the original sequence. The system counts how many times this has happened, and after a threshold, parks the record in a dead-letter queue.
 
 That lack of ordering is the reason queues _can_ isolate a poison message. Because records aren't chained to each other in sequence, one record failing doesn't hold up the rest. In a stream, ordering and head-of-line blocking are two sides of the same coin. In a queue, any worker can grab any visible record, so a stuck one just sits in timeout while everything else moves on.
 
@@ -144,6 +144,8 @@ So `payment.events` stayed exactly where it was: Kafka, six partitions, read ind
 The week after cutover, a new malformed currency code came through. The SQS queue bounced it five times, parked it in the DLQ, and nobody's phone buzzed. Riya saw it Monday morning in the review, fixed the upstream validation, and closed the ticket before lunch.
 
 **The system that runs your background jobs right now: did someone choose it for the job, or is it just whatever was already running?**
+
+**Update**, [29/07/2026]: Tom Fairbairn and Gandherva Gunathilak pushed back on the original phrasing of the queue definition in [LinkedIn comments](https://www.linkedin.com/posts/shahbaz-ahmed-973a80100_streams-are-not-queues-activity-7486034963826536448-39dC) — "the order doesn't matter much" — and they are right. Queues are frequently ordered constructs, for example SQS FIFO, I've rewritten that line. The point I was actually making is that a queue lets you choose to give ordering up, while a partitioned log doesn't offer that choice — and that enforcing order anywhere, Kafka partition or SQS message group, brings head-of-line blocking back with it. Thanks for the correction.
 
 ---
 
