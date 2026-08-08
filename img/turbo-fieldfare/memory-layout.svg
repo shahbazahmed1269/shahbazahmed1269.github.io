@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" width="760" height="300" font-family="'Comic Sans MS','Segoe Print','Bradley Hand','Chalkboard SE',cursive" role="img" aria-label="Where the 14.3 GB model lives: about 2 GB resident in RAM, a 12.9 GB routed-expert pool on SSD, streamed on a cache miss">
+  <defs>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+      <path d="M0,0 L9,5 L0,10 L3,5 Z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect x="4" y="4" width="752" height="292" rx="16" fill="#fdfcf9" stroke="#e6e2d8"/>
+  <text x="380" y="42" text-anchor="middle" font-size="21" fill="#2f2f2f">Where the 14.3 GB model lives</text>
+
+  <g filter="url(#rough)">
+    <rect x="48" y="76" width="300" height="182" rx="14" fill="#eaf2fb" stroke="#33475e" stroke-width="2"/>
+  </g>
+  <text x="198" y="102" text-anchor="middle" font-size="15" fill="#33475e">In RAM — ~2 GB resident</text>
+  <g filter="url(#rough)">
+    <rect x="70" y="116" width="256" height="34" rx="8" fill="#ffffff" stroke="#33475e" stroke-width="1.5"/>
+    <rect x="70" y="158" width="256" height="34" rx="8" fill="#ffffff" stroke="#33475e" stroke-width="1.5"/>
+    <rect x="70" y="200" width="256" height="34" rx="8" fill="#ffffff" stroke="#33475e" stroke-width="1.5"/>
+  </g>
+  <text x="198" y="138" text-anchor="middle" font-size="14" fill="#2f2f2f">Dense core — 1.35 GB</text>
+  <text x="198" y="180" text-anchor="middle" font-size="14" fill="#2f2f2f">KV cache</text>
+  <text x="198" y="222" text-anchor="middle" font-size="14" fill="#2f2f2f">Hot experts (cached)</text>
+
+  <g filter="url(#rough)">
+    <rect x="452" y="112" width="260" height="110" rx="14" fill="#fbeee4" stroke="#8a4b2f" stroke-width="2"/>
+  </g>
+  <text x="582" y="100" text-anchor="middle" font-size="15" fill="#8a4b2f">On SSD</text>
+  <text x="582" y="160" text-anchor="middle" font-size="15" fill="#2f2f2f">Routed-expert pool</text>
+  <text x="582" y="184" text-anchor="middle" font-size="15" fill="#2f2f2f">12.9 GB</text>
+
+  <path d="M452,205 C418,205 384,205 352,205" fill="none" stroke="#333" stroke-width="2" marker-end="url(#ah)" filter="url(#rough)"/>
+  <text x="402" y="197" text-anchor="middle" font-size="12.5" fill="#555">stream on cache miss (pread)</text>
+</svg>

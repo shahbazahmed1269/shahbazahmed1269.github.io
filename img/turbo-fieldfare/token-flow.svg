@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" font-family="'Comic Sans MS','Segoe Print','Bradley Hand','Chalkboard SE',cursive" role="img" aria-label="Generating one token: new token, router picks 8 experts per layer, expert cache (LFU) with a hit from RAM or a miss via pread from SSD, add the shared expert, emit the token, then loop">
+  <defs>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+      <path d="M0,0 L9,5 L0,10 L3,5 Z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect x="4" y="4" width="892" height="292" rx="16" fill="#fdfcf9" stroke="#e6e2d8"/>
+  <text x="450" y="40" text-anchor="middle" font-size="21" fill="#2f2f2f">Generating one token</text>
+
+  <g filter="url(#rough)">
+    <rect x="24" y="96" width="126" height="64" rx="12" fill="#eef1f4" stroke="#333" stroke-width="2"/>
+    <rect x="182" y="96" width="182" height="64" rx="12" fill="#eaf2fb" stroke="#33475e" stroke-width="2"/>
+    <rect x="396" y="96" width="150" height="64" rx="12" fill="#f0ecf7" stroke="#5b477e" stroke-width="2"/>
+    <rect x="578" y="96" width="150" height="64" rx="12" fill="#eaf6ee" stroke="#2f6f4a" stroke-width="2"/>
+    <rect x="760" y="96" width="116" height="64" rx="12" fill="#eef1f4" stroke="#333" stroke-width="2"/>
+  </g>
+
+  <text x="87"  y="133" text-anchor="middle" font-size="14" fill="#2f2f2f">new token</text>
+  <text x="273" y="124" text-anchor="middle" font-size="13" fill="#2f2f2f">router: top-8</text>
+  <text x="273" y="142" text-anchor="middle" font-size="13" fill="#2f2f2f">experts / layer</text>
+  <text x="471" y="124" text-anchor="middle" font-size="13" fill="#2f2f2f">expert cache</text>
+  <text x="471" y="142" text-anchor="middle" font-size="13" fill="#2f2f2f">(LFU)</text>
+  <text x="653" y="133" text-anchor="middle" font-size="13" fill="#2f2f2f">+ shared expert</text>
+  <text x="818" y="133" text-anchor="middle" font-size="14" fill="#2f2f2f">emit token</text>
+
+  <g filter="url(#rough)">
+    <path d="M150,128 L182,128" fill="none" stroke="#333" stroke-width="2" marker-end="url(#ah)"/>
+    <path d="M364,128 L396,128" fill="none" stroke="#333" stroke-width="2" marker-end="url(#ah)"/>
+    <path d="M546,128 L578,128" fill="none" stroke="#333" stroke-width="2" marker-end="url(#ah)"/>
+    <path d="M728,128 L760,128" fill="none" stroke="#333" stroke-width="2" marker-end="url(#ah)"/>
+    <path d="M818,160 L818,258 L87,258 L87,160" fill="none" stroke="#888" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ah)"/>
+  </g>
+
+  <text x="471" y="196" text-anchor="middle" font-size="12.5" fill="#5b477e">hit &#8594; use RAM copy</text>
+  <text x="471" y="214" text-anchor="middle" font-size="12.5" fill="#8a4b2f">miss &#8594; pread from SSD, fill slot</text>
+  <text x="452" y="250" text-anchor="middle" font-size="12.5" fill="#666">next token</text>
+</svg>
